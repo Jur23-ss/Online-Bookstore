@@ -10,16 +10,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $stmt = $conn->prepare("SELECT role FROM users WHERE id = ?");
-if (!$stmt) {
-    die("Prepare failed: " . $conn->error);
-}
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $stmt->bind_result($role);
 $stmt->fetch();
 $stmt->close();
 
-if ($role !== 'Admin') {
-    die("Access denied.");
+if ($role !== 'Admin' && $role !== 'Librarian') {
+    die("Access denied. Admins or Librarians only.");
 }
 ?>

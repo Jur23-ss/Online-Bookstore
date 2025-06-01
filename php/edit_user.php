@@ -9,7 +9,7 @@ if (!isset($_GET['id'])) {
 }
 
 $id = intval($_GET['id']);
-$stmt = $conn->prepare("SELECT name, email, role FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT name, email FROM users WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -18,15 +18,14 @@ $user = $result->fetch_assoc();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $password = $_POST['password'];
-    $role = $_POST['role'];
 
     if (!empty($password)) {
         $hashed = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE users SET name = ?, password = ?, role = ? WHERE id = ?");
-        $stmt->bind_param("sssi", $name, $hashed, $role, $id);
+        $stmt = $conn->prepare("UPDATE users SET name = ?, password = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $name, $hashed, $id);
     } else {
-        $stmt = $conn->prepare("UPDATE users SET name = ?, role = ? WHERE id = ?");
-        $stmt->bind_param("ssi", $name, $role, $id);
+        $stmt = $conn->prepare("UPDATE users SET name = ? WHERE id = ?");
+        $stmt->bind_param("si", $name, $id);
     }
 
     $stmt->execute();
@@ -56,11 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 10px;
         }
         h2 {
-            color: #4a7c59;
+            color: #ff2c1f;
             text-align: center;
             margin-bottom: 1.5rem;
         }
-        input, select {
+        input {
             width: 100%;
             padding: 0.8rem;
             margin-bottom: 1rem;
@@ -72,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn {
             width: 100%;
             padding: 0.8rem;
-            background: #4a7c59;
+            background: #ff2c1f;
             color: white;
             font-weight: bold;
             border-radius: 5px;
@@ -80,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cursor: pointer;
         }
         .btn:hover {
-            background: rgb(37, 70, 47);
+            background: #0c4090;
         }
     </style>
 </head>
@@ -90,11 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>
         <input type="text" value="<?= htmlspecialchars($user['email']) ?>" disabled>
         <input type="password" name="password" placeholder="New Password (leave blank to keep)">
-        <select name="role" required>
-            <option value="Admin" <?= $user['role'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
-            <option value="Librarian" <?= $user['role'] === 'Librarian' ? 'selected' : '' ?>>Librarian</option>
-            <option value="User" <?= $user['role'] === 'User' ? 'selected' : '' ?>>User</option>
-        </select>
         <button class="btn" type="submit">Update User</button>
     </form>
 </body>

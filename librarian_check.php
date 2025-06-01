@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 include 'includes/db_connect.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -19,7 +20,6 @@ $stmt->bind_result($role);
 $stmt->fetch();
 $stmt->close();
 
-if ($role !== 'Admin') {
-    die("Access denied.");
+if ($role !== 'Librarian') {
+    die("Access denied. Librarians only.");
 }
-?>

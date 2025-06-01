@@ -39,7 +39,6 @@ $sliders = $conn->query("SELECT * FROM sliders ORDER BY id DESC");
         th, td {
             padding: 1rem;
             border-bottom: 1px solid #333;
-            vertical-align: middle;
         }
         th {
             background: #2a2a2a;
@@ -50,18 +49,12 @@ $sliders = $conn->query("SELECT * FROM sliders ORDER BY id DESC");
         a.delete {
             color: #ff4d4d;
         }
-        img {
-            max-width: 150px;
-            max-height: 80px;
-            object-fit: contain;
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
     <h2>Manage Slider Content</h2>
     <a class="btn" href="admin.php" style="margin-left: 1rem;">⬅ Back to Admin Panel</a>
-    <a class="btn" href="add_slider.php">Add Slide</a>
+    <a class="btn" href="add_slider.php">➕ Add Slide</a>
     <table>
         <tr>
             <th>ID</th>
@@ -73,9 +66,7 @@ $sliders = $conn->query("SELECT * FROM sliders ORDER BY id DESC");
         <?php while ($row = $sliders->fetch_assoc()): ?>
         <tr>
             <td><?= $row['id'] ?></td>
-            <td>
-                <img src="images/<?= htmlspecialchars($row['cover_image'] ?? 'default_slider.jpg') ?>" alt="Slide Image">
-            </td>
+            <td><?= htmlspecialchars($row['cover_image']) ?></td>
             <td><?= htmlspecialchars($row['headline']) ?></td>
             <td><?= htmlspecialchars($row['subheadline']) ?></td>
             <td>

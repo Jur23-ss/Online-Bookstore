@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         h2 {
             text-align: center;
             margin-bottom: 1.5rem;
-            color: #ff2c1f;
+            color: #4a7c59;
         }
         input[type="text"],
         input[type="email"],
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn {
             width: 100%;
             padding: 0.75rem;
-            background: #ff2c1f;
+            background: #4a7c59;
             color: white;
             border: none;
             border-radius: 5px;
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cursor: pointer;
         }
         .btn:hover {
-            background: #0c4090;
+            background:rgb(34, 65, 43);
         }
         .error {
             color: #ff4d4d;
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 1rem;
         }
         .link a {
-            color: #ff2c1f;
+            color: #4a7c59;
             text-decoration: none;
         }
         .link a:hover {

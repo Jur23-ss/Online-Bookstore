@@ -8,40 +8,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
-    if (!$stmt) {
-        $errors[] = "Database error: " . $conn->error;
-    } else {
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->bind_result($user_id, $hashed, $role);
-
-        if ($stmt->fetch()) {
-            if (password_verify($password, $hashed)) {
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['user_role'] = $role;
-                $stmt->close();
-
-                // Redirect based on user role
-                if ($role === 'Admin') {
-                    header("Location: admin.php");
-                } elseif ($role === 'Librarian') {
-                    header("Location: librarianDashboard.php");
-                } else {
-                    header("Location: index.php");
-                }
-                exit;
-            } else {
-                $errors[] = "Invalid password.";
-            }
+    $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($user_id, $hashed);
+    if ($stmt->fetch()) {
+        if (password_verify($password, $hashed)) {
+            $_SESSION['user_id'] = $user_id;
+            header("Location: index.php");
+            exit;
         } else {
-            $errors[] = "Email not found.";
+            $errors[] = "Invalid password.";
         }
-
-        $stmt->close();
+    } else {
+        $errors[] = "Email not found.";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

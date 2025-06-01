@@ -1,11 +1,7 @@
 <?php
 session_start();
 include 'includes/db_connect.php';
-include 'admin_or_librarian_check.php';
-
-
-
-$role = $_SESSION['user_role'] ?? '';
+include 'admin_check.php';
 
 // Build dynamic query
 $query = "SELECT * FROM books WHERE 1=1";
@@ -44,7 +40,7 @@ $books = $conn->query($query);
             margin: auto;
         }
         h2 {
-            color: #4a7c59;
+            color: #ff2c1f;
             text-align: left;
             margin-bottom: 1.5rem;
         }
@@ -73,7 +69,7 @@ $books = $conn->query($query);
             cursor: pointer;
         }
         .filter-bar button {
-            background: #4a7c59;
+            background: #ff2c1f;
         }
         table {
             width: 100%;
@@ -98,30 +94,16 @@ $books = $conn->query($query);
         td a.delete {
             color: #ff4d4d;
         }
-        .btn {
-            background: #292929;
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background: #4a7c59;
-        }
     </style>
 </head>
 <body>
 
 <div class="manage-container">
     <h2>Manage Books</h2>
-    <div style="margin-bottom: 1rem;">
-        <?php if ($role === 'Admin'): ?>
-            <a href="admin.php" class="btn">⬅ Back to Admin Dashboard</a>
-        <?php elseif ($role === 'Librarian'): ?>
-            <a href="librarianDashboard.php" class="btn">⬅ Back to Librarian Dashboard</a>
-        <?php endif; ?>
-    </div>
+<div style="margin-bottom: 1rem;">
+    <a href="admin.php" class="btn" style="background: #292929; color: white; padding: 0.6rem 1.2rem; border-radius: 6px; text-decoration: none; font-weight: bold;">⬅ Back to Admin Dashboard</a>
+</div>
+
 
     <form class="filter-bar" method="GET" action="manage_books.php">
         <input type="text" name="search" placeholder="Search by title or author" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">

@@ -41,7 +41,7 @@ $book = $result->fetch_assoc();
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
-            background: #4a7c59;
+            background: #f9f5ec;
             color: #2e4d2e;
             font-family: 'Poppins', sans-serif;
             padding: 2rem;

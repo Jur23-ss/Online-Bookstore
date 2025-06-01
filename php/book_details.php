@@ -27,7 +27,7 @@ if (isset($_GET['id'])) {
     <style>
         body {
             margin: 0;
-            background-color: #4a7c59;
+            background-color: #f9f5ec;
             font-family: 'Poppins', sans-serif;
             color: #2e4d2e;
         }
@@ -120,8 +120,8 @@ if (isset($_GET['id'])) {
             <h1><?= htmlspecialchars($book['title']) ?></h1>
             <p><span>Author:</span> <?= htmlspecialchars($book['author']) ?></p>
             <p><span>Genre:</span> <?= htmlspecialchars($book['book_genre']) ?></p>
-            <p><span>Price:</span> $<?= number_format($book['price'], 2) ?></p>
-            <p><span>Stock:</span>  <?= (int)$book['stock'] ?></p>
+            <p><span>Price:</span> 💰 $<?= number_format($book['price'], 2) ?></p>
+            <p><span>Stock:</span> 📦 <?= (int)$book['stock'] ?></p>
             <div class="description">
                 <?= nl2br(htmlspecialchars($book['description'])) ?>
             </div>

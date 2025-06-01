@@ -12,16 +12,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 }
 
-$role = null;
-if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT role FROM users WHERE id = ?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $stmt->bind_result($role);
-    $stmt->fetch();
-    $stmt->close();
-}
-
 $sliders = $conn->query("SELECT * FROM sliders ORDER BY id ASC");
 $featuredBooks = $conn->query("SELECT * FROM books WHERE section = 'featured' ORDER BY id DESC LIMIT 10");
 $comingSoon = $conn->query("SELECT * FROM books WHERE section = 'coming' ORDER BY id DESC LIMIT 10");
@@ -34,39 +24,6 @@ $comingSoon = $conn->query("SELECT * FROM books WHERE section = 'coming' ORDER B
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
-    <style>
-        /* Add basic slider styling */
-        .slider-container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            position: relative;
-            overflow: hidden;
-        }
-        .slider-slide {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            margin-bottom: 2rem;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #222;
-        }
-        .slider-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .slider-caption {
-            position: absolute;
-            bottom: 15px;
-            left: 20px;
-            color: white;
-            background: rgba(0,0,0,0.6);
-            padding: 10px 15px;
-            border-radius: 6px;
-        }
-    </style>
 </head>
 <body>
 
@@ -77,38 +34,24 @@ $comingSoon = $conn->query("SELECT * FROM books WHERE section = 'coming' ORDER B
         <li><a href="#books">Featured</a></li>
         <li><a href="#coming">Coming</a></li>
         <li><a href="cart.php">🛒 View Cart (<?= $cartCount ?>)</a></li>
-
-        <?php if ($role === 'Admin'): ?>
-            <li><a href="admin.php">Admin Panel</a></li>
-        <?php elseif ($role === 'Librarian'): ?>
-            <li><a href="librarianDashboard.php">Librarian Panel</a></li>
+        <?php if (isset($_SESSION['user_id'])):
+            $stmt = $conn->prepare("SELECT is_admin FROM users WHERE id = ?");
+            $stmt->bind_param("i", $_SESSION['user_id']);
+            $stmt->execute();
+            $stmt->bind_result($is_admin);
+            $stmt->fetch();
+            $stmt->close();
+            if ($is_admin): ?>
+                <li><a href="admin.php">Admin Panel</a></li>
+            <?php endif; ?>
         <?php endif; ?>
     </ul>
-
     <?php if (isset($_SESSION['user_id'])): ?>
         <a href="logout.php" class="btn">Logout</a>
     <?php else: ?>
         <a href="login.php" class="btn">Sign in</a>
     <?php endif; ?>
 </header>
-
-<?php
-$sliders = $conn->query("SELECT id, image, headline, subheadline FROM sliders ORDER BY id ASC");
-?>
-
-<!-- Slider Section -->
-<div class="slider-container">
-    <?php while ($slider = $sliders->fetch_assoc()): ?>
-        <div class="slider-slide">
-            <img src="images/<?= htmlspecialchars($slider['image']) ?>" alt="<?= htmlspecialchars($slider['headline']) ?>">
-            <div class="slider-text">
-                <h3><?= htmlspecialchars($slider['headline']) ?></h3>
-                <p><?= htmlspecialchars($slider['subheadline']) ?></p>
-            </div>
-        </div>
-    <?php endwhile; ?>
-</div>
-
 
 <!-- Featured Books -->
 <section class="books-section" id="books">

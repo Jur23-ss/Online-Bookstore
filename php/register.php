@@ -5,48 +5,40 @@ include 'includes/db_connect.php';
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
-    if (!$stmt) {
-        $errors[] = "Database error: " . $conn->error;
+    if (!$name || !$email || !$password) {
+        $errors[] = "All fields are required.";
     } else {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        $stmt->bind_result($user_id, $hashed, $role);
-
-        if ($stmt->fetch()) {
-            if (password_verify($password, $hashed)) {
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['user_role'] = $role;
-                $stmt->close();
-
-                // Redirect based on user role
-                if ($role === 'Admin') {
-                    header("Location: admin.php");
-                } elseif ($role === 'Librarian') {
-                    header("Location: librarianDashboard.php");
-                } else {
-                    header("Location: index.php");
-                }
-                exit;
-            } else {
-                $errors[] = "Invalid password.";
-            }
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $errors[] = "Email already registered.";
         } else {
-            $errors[] = "Email not found.";
-        }
+            $hashed = password_hash($password, PASSWORD_DEFAULT);
+           $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+           
 
-        $stmt->close();
+
+            $stmt->bind_param("sss", $name, $email, $hashed);
+            $stmt->execute();
+            $_SESSION['user_id'] = $stmt->insert_id;
+            header("Location: index.php");
+            exit;
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Register</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
@@ -69,8 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         h2 {
             text-align: center;
             margin-bottom: 1.5rem;
-            color: #4a7c59;
+            color: #ff2c1f;
         }
+        input[type="text"],
         input[type="email"],
         input[type="password"] {
             width: 100%;
@@ -83,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn {
             width: 100%;
             padding: 0.75rem;
-            background: #4a7c59;
+            background: #ff2c1f;
             color: white;
             border: none;
             border-radius: 5px;
@@ -102,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 1rem;
         }
         .link a {
-            color: #4a7c59;
+            color: #ff2c1f;
             text-decoration: none;
         }
         .link a:hover {
@@ -112,17 +105,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="form-container">
-        <h2>Login</h2>
+        <h2>Register</h2>
         <?php foreach ($errors as $error): ?>
             <div class="error"><?= htmlspecialchars($error) ?></div>
         <?php endforeach; ?>
-        <form method="post" action="login.php">
+        <form method="post" action="register.php">
+            <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button class="btn" type="submit">Log In</button>
+            <button class="btn" type="submit">Register</button>
         </form>
         <div class="link">
-            Don't have an account? <a href="register.php">Register</a>
+            Already have an account? <a href="login.php">Log in</a>
         </div>
     </div>
 </body>

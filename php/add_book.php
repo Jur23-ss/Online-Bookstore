@@ -1,9 +1,7 @@
 <?php
 session_start();
 include 'includes/db_connect.php';
-include 'admin_or_librarian_check.php';
-
-
+include 'admin_check.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
@@ -41,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/style.css">
     <style>
         body {
-            background: #4a7c59;
+            background: #f9f5ec;
             color: #2e4d2e;
             font-family: 'Poppins', sans-serif;
             padding: 2rem;
@@ -49,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-container {
             max-width: 600px;
             margin: auto;
-            background: #fffdf5;
+            background: #fffdf6;
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 0 10px #ddd8c4;

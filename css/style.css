@@ -135,9 +135,24 @@ header{
 
 }
 
-.btn:hover{
-    background: #0c4090;
+/* Green-style buttons */
+button, .btn {
+    background-color: #4a7c59; /* normal green */
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
+
+/* On hover: darker green */
+button:hover, .btn:hover {
+    background-color: #385b44;
+}
+
 
 .container{
     width: 100%;

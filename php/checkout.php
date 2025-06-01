@@ -127,7 +127,7 @@ $stmt->bind_param("id", $user_id, $total_amount);
             text-decoration: none;
         }
         .btn:hover {
-            background:rgb(33, 84, 48);
+            background: #0c4090;
         }
         .success {
             color: #90ee90;

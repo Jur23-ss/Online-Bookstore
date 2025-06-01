@@ -96,7 +96,7 @@ while ($row = $result->fetch_assoc()) {
             color: white;
         }
         .btn-continue:hover {
-            background:rgb(50, 134, 75);
+            background: #0c4090;
         }
     </style>
 </head>
